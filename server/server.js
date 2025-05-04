@@ -7,16 +7,14 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-
+// === CORS Configuration ===
 const allowedOrigins = [
   "https://community-hub-fresh.vercel.app",
   "https://community-hub-fresh-git-main-sprinkles1113s-projects.vercel.app"
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests from listed origins OR Postman (no origin)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -26,24 +24,27 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-}));
+};
 
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // ✅ Handle preflight requests
 
+// === Middleware ===
 app.use(express.json());
 
-// Routes
+// === Routes ===
 const userRoutes = require("./routes/userRoutes");
 const proposalRoutes = require("./routes/proposalRoutes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/proposals", proposalRoutes);
 
-// Default route
+// === Root Health Check ===
 app.get("/", (req, res) => {
   res.send("API is running ✅");
 });
 
-// MongoDB connection
+// === Connect to MongoDB ===
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
