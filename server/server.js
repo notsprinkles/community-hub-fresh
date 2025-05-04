@@ -8,7 +8,27 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+
+const allowedOrigins = [
+  "https://community-hub-fresh.vercel.app",
+  "https://community-hub-fresh-git-main-sprinkles1113s-projects.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests from listed origins OR Postman (no origin)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+
 app.use(express.json());
 
 // Routes
