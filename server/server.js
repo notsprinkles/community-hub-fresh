@@ -10,7 +10,8 @@ const app = express();
 // === CORS Configuration ===
 const allowedOrigins = [
   "https://community-hub-fresh.vercel.app",
-  "https://community-hub-fresh-git-main-sprinkles1113s-projects.vercel.app"
+  "https://community-hub-fresh-git-main-sprinkles1113s-projects.vercel.app",
+  "https://community-hub-fresh-14zrje6yo-sprinkles1113s-projects.vercel.app" // <== Add this!
 ];
 
 const corsOptions = {
@@ -60,4 +61,3 @@ mongoose
     console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
-
