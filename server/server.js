@@ -8,27 +8,25 @@ dotenv.config();
 const app = express();
 
 // === CORS Configuration ===
-const allowedOrigins = [
-  "https://community-hub-fresh.vercel.app",
-  "https://community-hub-fresh-git-main-sprinkles1113s-projects.vercel.app",
-  "https://community-hub-fresh-14zrje6yo-sprinkles1113s-projects.vercel.app" // <== Add this!
-];
-
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin || // Allow Postman and server-to-server
+      origin.includes("vercel.app") // Allow ALL Vercel preview and production domains
+    ) {
       callback(null, true);
     } else {
+      console.warn(`❌ Blocked by CORS: ${origin}`);
       callback(new Error("CORS not allowed"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ Handle preflight requests
+app.options("*", cors(corsOptions)); // Handle preflight requests
 
 // === Middleware ===
 app.use(express.json());
@@ -61,4 +59,3 @@ mongoose
     console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
-
